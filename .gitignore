@@ -3,4 +3,5 @@
 # dependencies
 /node_modules
 .env
-config/
+config.json
+package-lock.json
