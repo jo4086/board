@@ -49,3 +49,5 @@ router
          next(err)
       }
    })
+
+module.exports = router
