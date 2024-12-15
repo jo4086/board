@@ -1,3 +1,4 @@
+// board-api/models/
 const Sequelize = require('sequelize')
 
 module.exports = class Post extends Sequelize.Model {

@@ -1,26 +1,31 @@
+// board-api/app.js
 // ━━━━━━━━━━━ 1. 미들웨어 가져오기 및 변수저장
 const express = require('express')
 const path = require('path')
-// const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
-// const sesseion = require('express-session')
+const session = require('express-session')
 const cors = require('cors')
+const passport = require('passport')
 
 const app = express()
 require('dotenv').config()
 
-// ━━━━━━━━━━━ 2. 라우터 및 기타 모듈 불러오기 
+// ━━━━━━━━━━━ 2. 라우터 및 기타 모듈 불러오기
 const { sequelize } = require('./models')
 const indexRouter = require('./routes')
 const authRouter = require('./routes/auth')
+const passportConfig = require('./passport')
 
+passportConfig() // passport 실행
 // ━━━━━━━━━━━ 3. 기본 포트 설정하기
 app.set('port', process.env.PORT || 8002)
 
 // ━━━━━━━━━━━ 4. 시퀄라이즈를 사용한 DB 연결
-sequelize   // .sync({ force: false }): DB와 모델의 동기화 설정
+sequelize // .sync({ force: false }): DB와 모델의 동기화 설정
    .sync({ force: false }) // true: 기존 테이블을 모두 삭제 후 새로 생성, 주로 개발 초기단계나 스키마를 완전히 변경해야 할 때 사용.
-   .then(() => {           // false: 기존 테이블삭제X, 필요한 경우 변경사항만 반영,, 기존에 테이블이 있다면, 유지시키며 데이터 보존
+   .then(() => {
+      // false: 기존 테이블삭제X, 필요한 경우 변경사항만 반영,, 기존에 테이블이 있다면, 유지시키며 데이터 보존
       console.log('데이터베이스 연결 성공!') // 연결 성공텍스트 출력
    })
    .catch((err) => {
@@ -58,6 +63,24 @@ app.use(express.urlencoded({ extended: false })) // URL-encoded 데이터 파싱
  * 메모리 사용량 많음 But,, 유연한 데이터 처리가능
  * ex Result: { key1: 'value1', key: { subkey: 'value2' } }
  **/
+app.use(cookieParser(process.env.COOKIE_SECRET)) // 쿠키 설정
+
+// Session 설정
+app.use(
+   session({
+      resave: false, // 세션 데이터 변경이 없으면 재저장 안함
+      saveUninitialized: true, // 초기화 되지 않은 빈 세션도 저장함
+      secret: process.env.COOKIE_SECRET, // 세션 암호화 키
+      cookie: {
+         httpOnly: true, // javascript로 쿠키 접근 여부,,  true: 접근 불가
+         secure: false, // https를 사용할 때만 쿠키 전송할지? false== http도 사용 가능함
+      },
+   }),
+)
+
+// Passport 초기화, 세션 연동
+app.use(passport.initialize()) // 초기화
+app.use(passport.session()) // Passport와 생성해둔 세션 연결
 
 // ━━━━━━━━━━━ 6. (Router middleware)
 // 6.1 라우터 등록

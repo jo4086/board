@@ -1,3 +1,4 @@
+// board-api/config/
 require('dotenv').config()
 
 module.exports = {

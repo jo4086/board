@@ -13,7 +13,8 @@ const Signup = () => {
     const dispatch = useDispatch()
     const { loading, error } = useSelector((state) => state.auth)
 
-    const handleSignup = useCallback(() => {
+    const handleSignup = useCallback((event) => {
+         event.preventDefault()
         if (!email.trim() || !nick.trim() || !password.trim() || !confirmPassword.trim()) {
             alert('모든 값을 입력하세요.')
             return
@@ -52,47 +53,53 @@ const Signup = () => {
     }
 
     return (
-        <S.Section style={{ display: 'block',textAlign:'center' }}>
-            <h4>회원가입 필드를 입력하세요</h4>
-            {error && <div style={{border:'1px solid black',padding:'20px',margin:'10px auto'}}>{error}</div>}
+       <S.Section style={{ display: 'block', textAlign: 'center' }}>
+          <h4>회원가입 필드를 입력하세요</h4>
+          {error && <div style={{ border: '1px solid black', padding: '20px', margin: '10px auto' }}>{error}</div>}
 
-            <S.Input
+          <form onSubmit={handleSignup}>
+             <S.Input
                 placeholder="Email"
                 type="email"
                 value={email}
+                autoComplete="email"
                 onChange={(e) => {
-                    setEmail(e.target.value)
+                   setEmail(e.target.value)
                 }}
-            />
-            <S.Input
+             />
+             <S.Input
                 placeholder="이름"
                 type="text"
                 value={nick}
+                autoComplete="name"
                 onChange={(e) => {
-                    setNick(e.target.value)
+                   setNick(e.target.value)
                 }}
-            />
-            <S.Input
+             />
+             <S.Input
                 placeholder="비밀번호"
                 type="password"
                 value={password}
+                autoComplete="new-password"
                 onChange={(e) => {
-                    setPassword(e.target.value)
+                   setPassword(e.target.value)
                 }}
-            />
-            <S.Input
+             />
+             <S.Input
                 placeholder="비밀번호 확인"
                 type="password"
                 value={confirmPassword}
+                autoComplete="new-password"
                 onChange={(e) => {
-                    setConfirmPassword(e.target.value)
+                   setConfirmPassword(e.target.value)
                 }}
-            />
+             />
 
-            <S.Button style={{display:'block', width:'60%',margin:'20px auto'}} onClick={handleSignup} disabled={loading}>
+             <S.Button type="submit" style={{ display: 'block', width: '60%', margin: '20px auto' }} disabled={loading}>
                 {loading ? '가입중' : '회원가입'}
-            </S.Button>
-        </S.Section>
+             </S.Button>
+          </form>
+       </S.Section>
     )
 }
 
