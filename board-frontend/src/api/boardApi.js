@@ -40,3 +40,14 @@ export const logoutUser = async () => {
         throw err
     }
 }
+
+// 로그인 여부 체크
+export const checkAuthStatus = async () => {
+    try {
+        const response =await boardApi.get('/auth/status')
+        return response
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+}

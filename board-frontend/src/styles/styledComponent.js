@@ -32,12 +32,22 @@ export const Container = styled.div`
 export const Section = styled.section`
    width: 100%;
    justify-content: center;
-   height: 400px;
+   // height: 400px;
    margin: 20px 0;
    background-color: yellow;
    display: flex;
    padding: 20px;
    box-sizing: border-box;
+`
+
+export const navLogin = styled.div`
+   wdith: auto;
+   padding: 5px 10px;
+   margin: 10px 20px;
+   display: flex;
+   box-sizing: border-box;
+   align-items:center;
+   gap: 10px;
 `
 
 export const Button = styled.button`

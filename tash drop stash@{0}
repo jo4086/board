@@ -1,0 +1,434 @@
+[1mdiff --git a/board-api/app.js b/board-api/app.js[m
+[1mindex b2ce65f..9c88bee 100644[m
+[1m--- a/board-api/app.js[m
+[1m+++ b/board-api/app.js[m
+[36m@@ -23,20 +23,20 @@[m [mapp.set('port', process.env.PORT || 8002)[m
+ [m
+ // ━━━━━━━━━━━ 4. 시퀄라이즈를 사용한 DB 연결[m
+ sequelize // .sync({ force: false }): DB와 모델의 동기화 설정[m
+[31m-   .sync({ force: false }) // true: 기존 테이블을 모두 삭제 후 새로 생성, 주로 개발 초기단계나 스키마를 완전히 변경해야 할 때 사용.[m
+[31m-   .then(() => {[m
+[31m-      // false: 기존 테이블삭제X, 필요한 경우 변경사항만 반영,, 기존에 테이블이 있다면, 유지시키며 데이터 보존[m
+[31m-      console.log('데이터베이스 연결 성공!') // 연결 성공텍스트 출력[m
+[31m-   })[m
+[31m-   .catch((err) => {[m
+[31m-      console.error(err) // 연결 실패시 오류 출력[m
+[31m-   })[m
+[32m+[m[32m    .sync({ force: false }) // true: 기존 테이블을 모두 삭제 후 새로 생성, 주로 개발 초기단계나 스키마를 완전히 변경해야 할 때 사용.[m
+[32m+[m[32m    .then(() => {[m
+[32m+[m[32m        // false: 기존 테이블삭제X, 필요한 경우 변경사항만 반영,, 기존에 테이블이 있다면, 유지시키며 데이터 보존[m
+[32m+[m[32m        console.log('데이터베이스 연결 성공!') // 연결 성공텍스트 출력[m
+[32m+[m[32m    })[m
+[32m+[m[32m    .catch((err) => {[m
+[32m+[m[32m        console.error(err) // 연결 실패시 오류 출력[m
+[32m+[m[32m    })[m
+ [m
+ app.use([m
+[31m-   cors({[m
+[31m-      origin: 'http://localhost:3000', // 특정 주소만 request 허용[m
+[31m-      credentials: true, // 쿠키, 세션 등 인증정보 허용[m
+[31m-   }),[m
+[32m+[m[32m    cors({[m
+[32m+[m[32m        origin: 'http://localhost:3000', // 특정 주소만 request 허용[m
+[32m+[m[32m        credentials: true, // 쿠키, 세션 등 인증정보 허용[m
+[32m+[m[32m    }),[m
+ )[m
+ [m
+ // ━━━━━━━━━━━ 5. 미들웨어 설정,, (app.use: Express에서 미들웨어 등록 때 사용)[m
+[36m@@ -67,15 +67,15 @@[m [mapp.use(cookieParser(process.env.COOKIE_SECRET)) // 쿠키 설정[m
+ [m
+ // Session 설정[m
+ app.use([m
+[31m-   session({[m
+[31m-      resave: false, // 세션 데이터 변경이 없으면 재저장 안함[m
+[31m-      saveUninitialized: true, // 초기화 되지 않은 빈 세션도 저장함[m
+[31m-      secret: process.env.COOKIE_SECRET, // 세션 암호화 키[m
+[31m-      cookie: {[m
+[31m-         httpOnly: true, // javascript로 쿠키 접근 여부,,  true: 접근 불가[m
+[31m-         secure: false, // https를 사용할 때만 쿠키 전송할지? false== http도 사용 가능함[m
+[31m-      },[m
+[31m-   }),[m
+[32m+[m[32m    session({[m
+[32m+[m[32m        resave: false, // 세션 데이터 변경이 없으면 재저장 안함[m
+[32m+[m[32m        saveUninitialized: true, // 초기화 되지 않은 빈 세션도 저장함[m
+[32m+[m[32m        secret: process.env.COOKIE_SECRET, // 세션 암호화 키[m
+[32m+[m[32m        cookie: {[m
+[32m+[m[32m            httpOnly: true, // javascript로 쿠키 접근 여부,,  true: 접근 불가[m
+[32m+[m[32m            secure: false, // https를 사용할 때만 쿠키 전송할지? false== http도 사용 가능함[m
+[32m+[m[32m        },[m
+[32m+[m[32m    }),[m
+ )[m
+ [m
+ // Passport 초기화, 세션 연동[m
+[36m@@ -89,25 +89,27 @@[m [mapp.use('/auth', authRouter)[m
+ [m
+ // 6.2 잘못된 라우터 경로 처리[m
+ app.use((req, res, next) => {[m
+[31m-   const err = new Error(`${method}${req.url} 라우터가 없습니다.`) // 에러 객채 새로 생성[m
+[31m-   err.status = 404 // err의 상태코드 404로 설정[m
+[31m-   next(err) // 에러 미들웨어로 전송[m
+[32m+[m[32m    const err = new Error(`${method}${req.url} 라우터가 없습니다.`) // 에러 객채 새로 생성[m
+[32m+[m[32m    err.status = 404 // err의 상태코드 404로 설정[m
+[32m+[m[32m    next(err) // 에러 미들웨어로 전송[m
+ })[m
+ [m
+ // ━━━━━━━━━━━ 7. 에러처리 미들웨어[m
+ app.use((err, req, res, next) => {[m
+[31m-   const statusCode = err.status || 500 // 에러코드가 있으면 사용 없으면 500[m
+[31m-   const errorMessage = err.message || '서버 내부 오류' // 에러 메세지 있으면 사용, 없으면 후자 출력[m
+[32m+[m[32m    const statusCode = err.status || 500 // 에러코드가 있으면 사용 없으면 500[m
+[32m+[m[32m    const errorMessage = err.message || '서버 내부 오류' // 에러 메세지 있으면 사용, 없으면 후자 출력[m
+ [m
+[31m-   res.status(statusCode).json({[m
+[31m-      success: false,[m
+[31m-      message: errorMessage,[m
+[31m-      error: err,[m
+[31m-   })[m
+[32m+[m[32m    console.log(err)[m
+[32m+[m
+[32m+[m[32m    res.status(statusCode).json({[m
+[32m+[m[32m        success: false,[m
+[32m+[m[32m        message: errorMessage,[m
+[32m+[m[32m        error: err,[m
+[32m+[m[32m    })[m
+ })[m
+ [m
+ // ━━━━━━━━━━━ 8. 경로 요청 성공 및 응답[m
+ app.options('*', cors()) // 모든 경로에 대한 options 요청 허용,[m
+ app.listen(app.get('port'), () => {[m
+[31m-   console.log(app.get('port'), '번 포트에서 대기중')[m
+[32m+[m[32m    console.log(app.get('port'), '번 포트에서 대기중')[m
+ })[m
+[1mdiff --git a/board-api/passport/localStrategy.js b/board-api/passport/localStrategy.js[m
+[1mindex 0bd0d36..734f9a1 100644[m
+[1m--- a/board-api/passport/localStrategy.js[m
+[1m+++ b/board-api/passport/localStrategy.js[m
+[36m@@ -4,7 +4,7 @@[m [mconst LocalStrategy = require('passport-local').Strategy[m
+ const bcrypt = require('bcrypt')[m
+ const User = require('../models/user')[m
+ [m
+[31m-/*[m
+[32m+[m
+ module.exports = () => {[m
+    passport.use([m
+       new LocalStrategy([m
+[36m@@ -37,8 +37,8 @@[m [mmodule.exports = () => {[m
+       ),[m
+    )[m
+ }[m
+[31m-*/[m
+ [m
+[32m+[m[32m/*[m
+ module.exports = () => {[m
+    passport.use([m
+       new LocalStrategy([m
+[36m@@ -77,3 +77,4 @@[m [mmodule.exports = () => {[m
+       ),[m
+    )[m
+ }[m
+[32m+[m[32m*/[m
+\ No newline at end of file[m
+[1mdiff --git a/board-api/routes/auth.js b/board-api/routes/auth.js[m
+[1mindex e8b172f..3cc8ecc 100644[m
+[1m--- a/board-api/routes/auth.js[m
+[1m+++ b/board-api/routes/auth.js[m
+[36m@@ -1,122 +1,135 @@[m
+[31m-// board-api/routes/[m
+ const express = require('express')[m
+[31m-const router = express.Router()[m
+[32m+[m[32mconst passport = require('passport')[m
+ const bcrypt = require('bcrypt')[m
+[31m-const User = require('../models/user')[m
+ const { isLoggedIn, isNotLoggedIn } = require('./middlewares')[m
+[31m-require('dotenv').config()[m
+[32m+[m[32mconst User = require('../models/user')[m
+[32m+[m[32mconst router = express.Router()[m
+ [m
+[32m+[m[32m// 1. 회원가입, localhost:8000/auth/join[m
+[32m+[m[32mrouter[m
+[32m+[m[32m    .post('/join', async (req, res, next) => {[m
+[32m+[m[32m        const { email, nick, password } = req.body[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            const exUser = await User.findOne({ where: { email } })[m
+ [m
+[31m-router.get('/', async (req, res, next) => {[m
+[31m-   res.status(200).json({[m
+[31m-      message: '회원가입 정보를 입력하세요'[m
+[31m-   })[m
+[31m-})[m
+[32m+[m[32m            if (exUser) {[m
+[32m+[m[32m                return res.status(409).json({[m
+[32m+[m[32m                    success: false,[m
+[32m+[m[32m                    message: '이미 존재하는 email입니다.'[m
+[32m+[m[32m                })[m
+[32m+[m[32m            }[m
+[32m+[m[41m            [m
+[32m+[m[32m            const hash = await bcrypt.hash(password, 12)[m
+ [m
+[31m-router[m
+[31m-   .post('/join', isNotLoggedIn[m
+[31m-      , async (req, res, next) => {[m
+[31m-      const {email, nick, password} = req.body[m
+[31m-      try {[m
+[31m-         const exUser = await User.findOne({where:{email}})[m
+[31m-         if (exUser) {[m
+[31m-            return res.status(409).json({[m
+[31m-               success: false,[m
+[31m-               message: '이미 존재하는 Email입니다.',[m
+[32m+[m[32m            const newUser = await User.create({[m
+[32m+[m[32m                email,[m
+[32m+[m[32m                nick,[m
+[32m+[m[32m                password: hash,[m
+             })[m
+[31m-         }[m
+ [m
+[31m-         // 환경변수를 사용하여 코드수정 없이 값을 바꾸게함[m
+[31m-         // parseInt는 지정된 문자열을 두번째 변수를 기준으로 정수로 변환, 10을 입력하여서 10진수로 변환시킴, 기본적으로 .env의 값을 쓰고 .env의 값이 존재하지 않게 되어도 12로 실행할 수 있게함[m
+[31m-         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12[m
+[31m-         const hash = await bcrypt.hash(password, saltRounds)[m
+[32m+[m[32m            res.status(201).json({[m
+[32m+[m[32m                success: true,[m
+[32m+[m[32m                message: '사용자가 성공적으로 등록',[m
+[32m+[m[32m                user: {[m
+[32m+[m[32m                    id: newUser.id,[m
+[32m+[m[32m                    nick: newUser.nick,[m
+[32m+[m[32m                    email: newUser.email,[m
+[32m+[m[32m                }[m
+[32m+[m[32m            })[m
+[32m+[m[32m        } catch (err) {[m
+[32m+[m[32m            console.error(err)[m
+[32m+[m[32m            res.status(500).json({[m
+[32m+[m[32m                success: false,[m
+[32m+[m[32m                message: '회원가입 중 오류 발생',[m
+[32m+[m[32m                err[m
+[32m+[m[32m            })[m
+[32m+[m[32m        }[m
+[32m+[m[32m    })[m
+ [m
+[31m-         const newUser = await User.create({[m
+[31m-            email,[m
+[31m-            nick,[m
+[31m-            password: hash[m
+[31m-         })[m
+[32m+[m[32m// 로그인[m
+[32m+[m[32mrouter[m
+[32m+[m[32m    .post('/login', isNotLoggedIn, async (req, res, next) => {[m
+[32m+[m[32m        passport.authenticate('local', (authError, user, info) => {[m
+[32m+[m[32m            if (authError) {[m
+[32m+[m[32m                return res.status(500).json({ success: false, message: '인증 중 오류 발생', error: authError })[m
+[32m+[m[32m            }[m
+ [m
+[31m-         console.log('새로운 사용자 등록: ',newUser)[m
+[31m-         res.status(201).json({[m
+[31m-            success: true,[m
+[31m-            message: '사용자의 정보가 정상적으로 등록되었습니다.',[m
+[31m-            user: {[m
+[31m-               id: newUser.id,[m
+[31m-               nick: newUser.nick,[m
+[31m-               email: newUser.email[m
+[32m+[m[32m            if (!user) {[m
+[32m+[m[32m                // 비밀번호 불일치 및 사용자 존재X시 info.message로 메세지 전달[m
+[32m+[m[32m                return res.status(401).json({[m
+[32m+[m[32m                    success: false,[m
+[32m+[m[32m                    message: info.message || '로그인 실패'[m
+[32m+[m[32m                })[m
+             }[m
+[31m-         })[m
+[31m-      } catch (err) {[m
+[31m-         console.error(err)[m
+[31m-         res.status(500).json({[m
+[31m-            success: false,[m
+[31m-            message: '회원가입 중 오류가 발생하였습니다.',[m
+[31m-            err,[m
+[31m-         })[m
+[31m-         next(err)[m
+[31m-      }[m
+[31m-   })[m
+ [m
+[31m-   // 로그아웃 localhost:8000/auth/login[m
+[31m-router.post('/login', isNotLoggedIn, async (req, res, next) => {[m
+[31m-    passport.authenticate('local', (authError, user, info) => {[m
+[31m-        if (authError) {[m
+[31m-            return res.status(500).json({[m
+[31m-                success: false,[m
+[31m-                message: '인증 중 오류 발생',[m
+[31m-                error: authError,[m
+[31m-            })[m
+[31m-        }[m
+[32m+[m[32m            // 인증 OK => 로그인 상태로 변경[m
+[32m+[m[32m            req.login(user, (loginError) => {[m
+[32m+[m[32m                if (loginError) {[m
+[32m+[m[32m                    // 로그인 도중 오류 발생[m
+[32m+[m[32m                    return res.status(500).json({[m
+[32m+[m[32m                        success: false,[m
+[32m+[m[32m                        message: '로그인 중 오류 발생',[m
+[32m+[m[32m                        error: loginError[m
+[32m+[m[32m                    })[m
+[32m+[m[32m                }[m
+ [m
+[31m-        if (!user) {[m
+[31m-            return res.status(401).json({[m
+[31m-                success: false,[m
+[31m-                message: info.message || '로그인 실패',[m
+[32m+[m[32m                // 로그인 성공, user 객체와 response 함, status code 미설정 시 기본값 200(OK)[m
+[32m+[m[32m                res.json({[m
+[32m+[m[32m                    success: true,[m
+[32m+[m[32m                    message: '로그인 성공',[m
+[32m+[m[32m                    user: {[m
+[32m+[m[32m                        id: user.id,[m
+[32m+[m[32m                        nick: user.nick,[m
+[32m+[m[32m                    }[m
+[32m+[m[32m                })[m
+             })[m
+[31m-        }[m
+[32m+[m[32m        })(req, res, next)[m
+[32m+[m[32m    })[m
+[32m+[m
+[32m+[m[32m// 로그아웃,, localhost:8000/auth/logout[m
+[32m+[m
+[32m+[m[32mrouter[m
+[32m+[m[32m    .get('/logout', async (req, res, next) => {[m
+[32m+[m[32m        // 로그아웃 상태로 변경[m
+[32m+[m[32m        req.logout((error) => {[m
+[32m+[m[32m            if (error) {[m
+[32m+[m[32m                // 로그아웃 중 에러 발생[m
+[32m+[m[32m                console.log(error)[m
+ [m
+[31m-        req.login(user, (loginError) => {[m
+[31m-            if (loginError) {[m
+                 return res.status(500).json({[m
+                     success: false,[m
+[31m-                    message: '로그인 중 오류 발생',[m
+[31m-                    error: loginError,[m
+[32m+[m[32m                    message: '로그아웃 중 오류 발생',[m
+[32m+[m[32m                    error,[m
+                 })[m
+             }[m
+ [m
+[32m+[m[32m            // 로그아웃 성공시 세션에 저장된 사용자 id 삭제,, 아래같은 결과를 response[m
+             res.json({[m
+                 success: true,[m
+[31m-                message: '로그인 성공',[m
+[31m-                user: {[m
+[31m-                    id: user.id,[m
+[31m-                    nick: user.nick,[m
+[31m-                },[m
+[32m+[m[32m                message: '로그아웃에 성공'[m
+             })[m
+         })[m
+[31m-    })(req, res, next)[m
+[31m-})[m
+[31m-[m
+[31m-// 로그아웃 localhost:8000/auth/logout[m
+[31m-router.get('/logout', isLoggedIn, async (req, res, next) => {[m
+[31m-   req.logout((err) => {[m
+[31m-      if (err) {[m
+[31m-         console.log(err)[m
+[32m+[m[32m    })[m
+ [m
+[31m-         return res.status(500).json({[m
+[31m-            success: false,[m
+[31m-            message: '로그아웃 중 에러 발생',[m
+[31m-            error: err,[m
+[31m-         })[m
+[31m-      }[m
+[31m-      res.json({[m
+[31m-         success: true,[m
+[31m-         message: '로그아웃에 성공했습니다.',[m
+[31m-      })[m
+[31m-   })[m
+[31m-})[m
+[32m+[m[32m// 로그인 상태 확인[m
+ [m
+[31m-// 로그인 상태 확인 localhost:8000/auth/status[m
+[31m-router.get('/status', async (req, res, next) => {})[m
+[32m+[m[32mrouter[m
+[32m+[m[32m    .get('/status', async (req, res, next) => {[m
+[32m+[m[32m        if (req.isAuthenticated()) {[m
+[32m+[m[32m            // 로그인 상태시, req.user는 passport의 역직렬화 설정에 의해 로그인 상태시 로그인의 user 정보를 가져올 수 있음[m
+[32m+[m[32m            res.json({[m
+[32m+[m[32m                isAuthenticated: true,[m
+[32m+[m[32m                user: {[m
+[32m+[m[32m                    id: req.user.id,[m
+[32m+[m[32m                    nick: req.user.nick,[m
+[32m+[m[32m                }[m
+[32m+[m[32m            })[m
+[32m+[m[32m        } else {[m
+[32m+[m[32m            // 로그인 상태가 아닐때,[m
+[32m+[m[32m            res.json({[m
+[32m+[m[32m                isAuthenticated: false,[m
+[32m+[m[32m            })[m
+[32m+[m[32m        }[m
+[32m+[m[32m    })[m
+ [m
+ module.exports = router[m
+[1mdiff --git a/board-frontend/src/App.js b/board-frontend/src/App.js[m
+[1mindex cbbcf50..49b8d57 100644[m
+[1m--- a/board-frontend/src/App.js[m
+[1m+++ b/board-frontend/src/App.js[m
+[36m@@ -6,6 +6,7 @@[m [mimport SignupPage from './pages/SignupPage'[m
+ import Home from './pages/Home'[m
+ import LoginPage from './pages/LoginPage'[m
+ [m
+[32m+[m
+ function App() {[m
+     return ([m
+         <>[m
+[1mdiff --git a/board-frontend/src/components/auth/Login.jsx b/board-frontend/src/components/auth/Login.jsx[m
+[1mindex 7c0a389..9bed067 100644[m
+[1m--- a/board-frontend/src/components/auth/Login.jsx[m
+[1m+++ b/board-frontend/src/components/auth/Login.jsx[m
+[36m@@ -32,8 +32,8 @@[m [mconst Login = () => {[m
+    return ([m
+       // <S.Container>[m
+       <S.Section style={{ display: 'block' }}>[m
+[31m-         <h2>로그인 페이지</h2>[m
+[31m-         {error && <S.Section>{error}</S.Section>}[m
+[32m+[m[32m         {!error && <h2>로그인 페이지</h2>}[m
+[32m+[m[32m         {error && <h2>{error}</h2>}[m
+          <form onSubmit={handleLogin}>[m
+             <InputField label="이메일" name="email" value={email} autoComplete="username" onChange={(e) => setEmail(e.target.value)} />[m
+             <InputField label="비밀번호" name="password" type="password"  value={password} autoComplete="new-password" onChange={(e) => setPassword(e.target.value)} />[m
+[1mdiff --git a/board-frontend/src/components/auth/Signup.jsx b/board-frontend/src/components/auth/Signup.jsx[m
+[1mindex 4bb36c3..a1b87f2 100644[m
+[1m--- a/board-frontend/src/components/auth/Signup.jsx[m
+[1m+++ b/board-frontend/src/components/auth/Signup.jsx[m
+[36m@@ -3,6 +3,7 @@[m [mimport { useDispatch, useSelector } from 'react-redux'[m
+ import { registerUserThunk } from '../../features/authSlice'[m
+ [m
+ import * as S from '../../styles/styledComponent'[m
+[32m+[m[32mimport InputField from '../shared/InputContainer'[m
+ [m
+ const Signup = () => {[m
+     const [email, setEmail] = useState('')[m
+[36m@@ -13,32 +14,35 @@[m [mconst Signup = () => {[m
+     const dispatch = useDispatch()[m
+     const { loading, error } = useSelector((state) => state.auth)[m
+ [m
+[31m-    const handleSignup = useCallback((event) => {[m
+[31m-         event.preventDefault()[m
+[31m-        if (!email.trim() || !nick.trim() || !password.trim() || !confirmPassword.trim()) {[m
+[31m-            alert('모든 값을 입력하세요.')[m
+[31m-            return[m
+[31m-        }[m
+[32m+[m[32m    const handleSignup = useCallback([m
+[32m+[m[32m        (event) => {[m
+[32m+[m[32m            event.preventDefault()[m
+[32m+[m[32m            if (!email.trim() || !nick.trim() || !password.trim() || !confirmPassword.trim()) {[m
+[32m+[m[32m                alert('모든 값을 입력하세요.')[m
+[32m+[m[32m                return[m
+[32m+[m[32m            }[m
+ [m
+[31m-        if (password !== confirmPassword) {[m
+[31m-            alert('비밀번호 확인이 일치하지 않습니다.')[m
+[31m-            return[m
+[31m-        }[m
+[32m+[m[32m            if (password !== confirmPassword) {[m
+[32m+[m[32m                alert('비밀번호 확인이 일치하지 않습니다.')[m
+[32m+[m[32m                return[m
+[32m+[m[32m            }[m
+ [m
+[31m-        dispatch(registerUserThunk({ email, nick, password }))[m
+[31m-            .unwrap()[m
+[31m-            .then(() => {[m
+[31

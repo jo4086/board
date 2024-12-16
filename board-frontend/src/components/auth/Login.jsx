@@ -32,8 +32,8 @@ const Login = () => {
    return (
       // <S.Container>
       <S.Section style={{ display: 'block' }}>
-         <h2>로그인 페이지</h2>
-         {error && <S.Section>{error}</S.Section>}
+         {!error && <h2>로그인 페이지</h2>}
+         {error && <h2>{error}</h2>}
          <form onSubmit={handleLogin}>
             <InputField label="이메일" name="email" value={email} autoComplete="username" onChange={(e) => setEmail(e.target.value)} />
             <InputField label="비밀번호" name="password" type="password"  value={password} autoComplete="new-password" onChange={(e) => setPassword(e.target.value)} />
