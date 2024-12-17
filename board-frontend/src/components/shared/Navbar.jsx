@@ -30,7 +30,7 @@ const Navbar = ({ isAuthenticated, user }) => {
 
             {isAuthenticated ? (
                 <S.navLogin>
-                    <Link to="/post/create">
+                    <Link to="/posts/create">
                         <S.Button>글쓰기</S.Button>
                     </Link>
                     <Link to="/my">

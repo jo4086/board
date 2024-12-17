@@ -44,10 +44,28 @@ export const logoutUser = async () => {
 // 로그인 여부 체크
 export const checkAuthStatus = async () => {
     try {
-        const response =await boardApi.get('/auth/status')
+        const response = await boardApi.get('/auth/status')
         return response
     } catch (error) {
         console.error(error)
         throw error
     }
 }
+
+// 글쓰기
+export const createPost = async (postData) => {
+    try {
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data' // 파일 전송시 반드시 지정
+            },
+        }
+
+        const response = await boardApi.post('/post', postData, config)
+        return response        
+    } catch (error) {
+        console.error(`API Request 오류: ${error.message}`)
+        throw error
+    }
+}
+
