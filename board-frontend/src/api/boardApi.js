@@ -52,7 +52,8 @@ export const checkAuthStatus = async () => {
     }
 }
 
-// 글쓰기
+// 2. 게시물 작성
+// 2-1. 글쓰기
 export const createPost = async (postData) => {
     try {
         const config = {
@@ -69,3 +70,52 @@ export const createPost = async (postData) => {
     }
 }
 
+// 2-2. 게시물 수정
+export const updatePost = async (id, postData) => {
+    try {
+        const config = {
+            headers: {
+                'Content-type': 'multipart/form-data',
+            }
+        }
+
+        const response = await boardApi.put(`/post/${id}`, postData, config)
+        return response
+    } catch (error) {
+        console.error(`API Request 오류: ${error.message}`)
+        throw error
+    }
+}
+
+// 2-3. 게시판 삭제
+export const deletePost = async (id) => {
+    try {
+        const response = await boardApi.delete(`/post/${id}`)
+        return response
+    } catch (error) {
+        console.error(`API Request 오류: ${error.meesage}`)
+        throw error
+    }
+}
+
+// 2-4. 전체 게시판 조회
+export const getPosts = async (page) => {
+    try {
+        const response = await boardApi.get(`/post?page=${page}`)
+        return response
+    } catch (error) {
+        console.error(`API Request 오류: ${error.message}`)
+        throw error
+    }
+}
+
+// 2-5. 특정 게시판 조회
+export const getPostById = async (id) => {
+    try {
+        const response = await boardApi.get(`/post/${id}`)
+        return response
+    } catch (error) {
+        console.error(`API Request 오류: ${error.message}`)
+        throw error
+    }
+}

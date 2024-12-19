@@ -1,0 +1,6 @@
+export { default as Home } from './Home'
+export { default as LoginPage } from './LoginPage'
+export { default as PostCreatePage } from './PostCreatePage'
+export { default as SignupPage } from './SignupPage'
+export { default as PostEditPage } from './PostEditPage'
+export { default as MyPage } from './MyPage'

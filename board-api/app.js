@@ -15,11 +15,12 @@ require('dotenv').config()
 const { sequelize } = require('./models')
 const indexRouter = require('./routes')
 const authRouter = require('./routes/auth')
+const postRouter = require('./routes/post')
 const passportConfig = require('./passport')
 
 passportConfig() // passport 실행
 // ━━━━━━━━━━━ 3. 기본 포트 설정하기
-app.set('port', process.env.PORT || 8002)
+app.set('port', process.env.PORT || 8005)
 
 // ━━━━━━━━━━━ 4. 시퀄라이즈를 사용한 DB 연결
 sequelize // .sync({ force: false }): DB와 모델의 동기화 설정
@@ -34,7 +35,7 @@ sequelize // .sync({ force: false }): DB와 모델의 동기화 설정
 
 app.use(
     cors({
-        origin: 'http://localhost:3000', // 특정 주소만 request 허용
+        origin: 'http://localhost:3005', // 특정 주소만 request 허용
         credentials: true, // 쿠키, 세션 등 인증정보 허용
     }),
 )
@@ -86,6 +87,7 @@ app.use(passport.session()) // Passport와 생성해둔 세션 연결
 // 6.1 라우터 등록
 app.use('/', indexRouter)
 app.use('/auth', authRouter)
+app.use('/post', postRouter)
 
 // 6.2 잘못된 라우터 경로 처리
 app.use((req, res, next) => {
