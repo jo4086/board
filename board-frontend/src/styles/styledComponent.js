@@ -72,16 +72,22 @@ export const InputContainer = styled.div`
     margin: 16px 0;
     box-sizing: border-box;
     width: 100%;
+    flex-grow: 1;
 
     label {
         display: block;
         margin-bottom: 8px;
         font-size: 14px;
         color: #555;
+
     }
 
-    input {
-        width: 100%;
+    input,
+    textarea {
+        width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
+
+        // width: auto;
+        // width: 100%;
         padding: 12px;
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -92,6 +98,12 @@ export const InputContainer = styled.div`
         &:focus {
             border-color: #4caf50;
         }
+    }
+
+    textarea {
+        resize: none; /* 사용자가 크기를 조정하지 못하게 설정 */
+        // min-height: 80px; /* 기본 높이 설정 */
+        min-height: ${({ rows }) => (rows ? `${rows * 24}px` : '80px')};
     }
 `
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { registerUserThunk } from '../../features/authSlice'
 
 import * as S from '../../styles/styledComponent'
-import InputField from '../shared/InputContainer'
+import InputField from '../shared/InputField'
 
 const Signup = () => {
     const [email, setEmail] = useState('')

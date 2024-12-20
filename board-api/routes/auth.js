@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
 const User = require('../models/user')
 const router = express.Router()
+require('dotenv').config()
 
 // 1. 회원가입, localhost:8000/auth/join
 router
@@ -19,7 +20,9 @@ router
                 })
             }
             
-            const hash = await bcrypt.hash(password, 12)
+            const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12;
+            
+            const hash = await bcrypt.hash(password, saltRounds)
 
             const newUser = await User.create({
                 email,

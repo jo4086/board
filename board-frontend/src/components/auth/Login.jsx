@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loginUserThunk } from '../../features/authSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import * as S from '../../styles/styledComponent'
-import InputField from '../shared/InputContainer'
+import InputField from '../shared/InputField'
 
 const Login = () => {
    const [email, setEmail] = useState('')
