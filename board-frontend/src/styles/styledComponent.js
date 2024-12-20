@@ -30,10 +30,11 @@ export const Container = styled.div`
 `
 
 export const Section = styled.section`
-    width: 100%;
+    width: 80%;
     justify-content: center;
     // height: 400px;
-    margin: 20px 0;
+    // margin: 20px 0;
+    margin: 20px auto;
     background-color: yellow;
     display: flex;
     padding: 20px;
@@ -79,7 +80,6 @@ export const InputContainer = styled.div`
         margin-bottom: 8px;
         font-size: 14px;
         color: #555;
-
     }
 
     input,
@@ -108,9 +108,11 @@ export const InputContainer = styled.div`
 `
 
 const StyledButton = styled.button`
-    background-color: rgb(12, 109, 126);
+    background-color: rgb(66, 145, 198);
+    font-size: 1em;
     line-height: 30px;
-    height: 30px;
+    letter-spacing: 1.4px;
+    height: auto;
     width: auto;
     font-weight: bold;
     color: white;
@@ -121,8 +123,19 @@ const StyledButton = styled.button`
     display: inline-block;
 
     &:hover {
-        background-color: rgb(8, 74, 85);
+        background-color: rgb(41, 121, 174);
     }
 `
+export const Box = styled.div`
+    display: flex;
+    width: ${({ $mt }) => ($mt ? `${$mt * 100}px` : 'auto')};
+    height: ${({ $mt }) => ($mt ? `${$mt * 100}px` : 'auto')};
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.3);
+    background-color:white;
+    margin: 10px 2px;
+    border-radius: 5px;
+`
+
+
 
 export default StyledButton // 기본으로 내보내기

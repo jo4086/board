@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import './styles/common.css'
 
 import Navbar from './components/shared/Navbar'
-import { Home, SignupPage, PostCreatePage, LoginPage, PostEditPage, MyPage } from './pages'
+import { Home, SignupPage, PostCreatePage, LoginPage, PostEditPage, MyPage, SelectPage } from './pages'
 
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuthStatusThunk } from './features/authSlice'
@@ -27,6 +27,7 @@ function App() {
                 <Route path="/posts/edit/:id" element={<PostEditPage />} />
                 <Route path="/my" element={<MyPage />} />
                 <Route path="/my/:id" element={<MyPage />} />
+                <Route path="/view/:id" element={<SelectPage isAuthenticated={isAuthenticated} user={user} />} />
             </Routes>
         </>
     )

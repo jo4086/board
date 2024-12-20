@@ -67,6 +67,7 @@ const Signup = () => {
                     type="email"
                     autoComplete="username"
                     value={email}
+                    fullWidth
                     onChange={(e) => {
                         setEmail(e.target.value)
                     }}
@@ -75,6 +76,7 @@ const Signup = () => {
                     label="이름"
                     autoComplete="username"
                     value={nick}
+                    fullWidth
                     onChange={(e) => {
                         setNick(e.target.value)
                     }}
@@ -84,6 +86,7 @@ const Signup = () => {
                     type="password"
                     autoComplete="new-password"
                     value={password}
+                    fullWidth
                     onChange={(e) => {
                         setPassword(e.target.value)
                     }}
@@ -93,6 +96,7 @@ const Signup = () => {
                     type="password"
                     autoComplete="new-password"
                     value={confirmPassword}
+                    fullWidth
                     onChange={(e) => {
                         setConfirmPassword(e.target.value)
                     }}

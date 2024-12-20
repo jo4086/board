@@ -24,8 +24,8 @@ const upload = multer({
         destination(req, file, cb) {
             cb(null, 'uploads/') // 업로드 폴더 경로 설정
         },
-        filename(req, file, db) {
-            const decodedFilName = decodeURIComponent(file.originalname) // 파일명 디코딩( 한글명 깨짐 방지 )
+        filename(req, file, cb) {
+            const decodedFileName = decodeURIComponent(file.originalname) // 파일명 디코딩( 한글명 깨짐 방지 )
 
             const ext = path.extname(decodedFileName) // 확장자 추출
 
@@ -119,7 +119,7 @@ router
              * [parameter_2]: 2, 8, 10, 16 진수 등으로 변환 (10진수일 경우 8)
              **/
             const page = parseInt(req.query.page, 10) || 1 // page번호
-            const limit = parseInt(req.query.limit, 10) || 3 // 페이지당 게시물 기본값 3개 제한
+            const limit = parseInt(req.query.limit, 10) || 6 // 페이지당 게시물 기본값 3개 제한
             const offset = (page - 1) * limit // 페이지당 3개의 게시물을 누적시킨 수를 제외하고 다음 게시물 출력
             // 2. 게시물 전체 레코드 GET
             const count = await Post.count()

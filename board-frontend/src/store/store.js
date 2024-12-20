@@ -5,7 +5,7 @@ import { authReducer, postReducer } from '../features'
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    post: postReducer,
+    posts: postReducer,
   }
 })
 
