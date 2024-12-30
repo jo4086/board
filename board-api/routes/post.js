@@ -73,6 +73,7 @@ router
             // 1. 이미지파일 여부 확인 없으면 null
             const imgPath = req.file ? req.file.filename : null
             
+            // console.log('\n\n\n',imgPath)
             // 2. model=Post에 게시물 생성
             const post = await Post.create({
                 content: req.body.content,

@@ -32,6 +32,7 @@ export const deletePostThunk = createAsyncThunk('posts/deletePost', async (id, {
 export const fetchPostsThunk = createAsyncThunk('posts/fetchPosts', async (page, { rejectWithValue }) => {
     try {
         const response = await getPosts(page)
+        // console.log(response.data.posts)
         return response.data
     } catch (error) {
         return rejectWithValue(error.response?.data?.message || '전체 게시물 불러오기 실패!!')

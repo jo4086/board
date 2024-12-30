@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 const PostItem = ({ post, isAuthenticated, user }) => {
 
-
+console.log(`${process.env.REACT_APP_API_URL}/${post.img}`)
     return (
         <>
             <Link to={`/view/${post.id}`} >
